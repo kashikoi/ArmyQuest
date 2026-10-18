@@ -1,0 +1,19 @@
+{
+  "name": "Army Quest I: In Pursuit of the Eagle",
+  "short_name": "Army Quest",
+  "description": "A retro Sierra AGI-style adventure game. Enlist, train, and rise through the ranks. Plays 100% offline; saves stay in your browser.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#000000",
+  "theme_color": "#0000AA",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

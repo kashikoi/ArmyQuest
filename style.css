@@ -1,0 +1,95 @@
+/* style.css — retro framing for the Army Quest canvas. */
+
+:root {
+  --scale: 3; /* 320x200 -> 960x600 */
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  background: #101014;
+  color: #c9c9d4;
+  font-family: "Courier New", monospace;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 16px;
+}
+
+#frame {
+  text-align: center;
+}
+
+h1 {
+  font-size: 20px;
+  letter-spacing: 3px;
+  margin: 0 0 12px;
+  color: #ffd84d;
+  text-shadow: 2px 2px 0 #000;
+}
+
+h1 span {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #8aa0ff;
+  margin-top: 2px;
+}
+
+#game {
+  width: calc(320px * var(--scale));
+  height: calc(200px * var(--scale));
+  /* Keep the upscaled pixels crisp. */
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  background: #000;
+  border: 3px solid #333;
+  box-shadow: 0 0 0 3px #000, 0 10px 40px rgba(0, 0, 0, 0.6);
+}
+
+#hint {
+  max-width: calc(320px * var(--scale));
+  margin: 12px auto 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #9a9aa8;
+}
+
+#hint code {
+  background: #1d1d24;
+  color: #ffd84d;
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+#hint kbd {
+  background: #2a2a33;
+  color: #e0e0e8;
+  border: 1px solid #444;
+  border-radius: 3px;
+  padding: 0 4px;
+  font-size: 11px;
+}
+
+#hint strong { color: #c9c9d4; }
+
+#meta {
+  margin: 6px auto 0;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: #5b5b68;
+}
+
+/* Shrink gracefully on narrow screens. */
+@media (max-width: 1000px) {
+  :root { --scale: 2; }
+}
+@media (max-width: 680px) {
+  :root { --scale: 1.4; }
+}

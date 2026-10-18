@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- EGA-style emblem: navy field, gold star, green/khaki shield -->
+  <rect width="512" height="512" fill="#0000AA"/>
+  <rect x="48" y="48" width="416" height="416" fill="#00AA00"/>
+  <rect x="48" y="48" width="416" height="24" fill="#FFFF55"/>
+  <rect x="48" y="440" width="416" height="24" fill="#FFFF55"/>
+  <!-- Gold star -->
+  <polygon points="256,96 300,214 424,214 324,288 362,406 256,334 150,406 188,288 88,214 212,214"
+           fill="#FFFF55" stroke="#AA5500" stroke-width="6"/>
+  <!-- Chevron rank stripes -->
+  <polygon points="256,330 312,374 288,374 256,350 224,374 200,374" fill="#FFFFFF"/>
+</svg>

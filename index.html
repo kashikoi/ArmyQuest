@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0000AA">
+  <meta name="description" content="Army Quest I: In Pursuit of the Eagle - a retro Sierra AGI-style adventure that plays 100% offline.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Army Quest">
+  <title>Army Quest I: In Pursuit of the Eagle</title>
+  <link rel="manifest" href="manifest.webmanifest?v=2026.10.18.1">
+  <link rel="icon" href="icon.svg?v=2026.10.18.1" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.svg?v=2026.10.18.1">
+  <link rel="stylesheet" href="style.css?v=2026.10.18.1">
+</head>
+<body>
+  <div id="frame">
+    <h1>ARMY QUEST I <span>In Pursuit of the Eagle</span></h1>
+    <canvas id="game" width="320" height="200"></canvas>
+    <p id="hint">
+      <strong>Move:</strong> Arrow keys / Numpad (press same key or <kbd>5</kbd>/<kbd>Space</kbd> to stop)
+      &nbsp;&bull;&nbsp; <strong>Commands:</strong> type and press <kbd>Enter</kbd>
+      &nbsp;&bull;&nbsp; <strong>Save:</strong> <kbd>F5</kbd> &nbsp; <strong>Restore:</strong> <kbd>F7</kbd>
+      <br>
+      Try: <code>look room</code>, <code>open dresser</code>, <code>wear clothes</code>,
+      <code>read brochure</code>, <code>take wallet</code>, <code>inventory</code>, <code>help</code>
+    </p>
+    <p id="meta">Plays 100% offline &bull; saves stay in your browser &bull; v2026.10.18.1</p>
+  </div>
+
+  <!-- Classic scripts: load order = parser, engine, rooms, main. -->
+  <script src="parser.js?v=2026.10.18.1"></script>
+  <script src="engine.js?v=2026.10.18.1"></script>
+  <script src="rooms/room1_bedroom.js?v=2026.10.18.1"></script>
+  <script src="rooms/room2_placeholder.js?v=2026.10.18.1"></script>
+  <script src="main.js?v=2026.10.18.1"></script>
+
+  <script>
+    // Register the offline service worker when served over http(s).
+    if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('sw.js?v=2026.10.18.1').catch(function () {});
+      });
+    }
+  </script>
+</body>
+</html>
