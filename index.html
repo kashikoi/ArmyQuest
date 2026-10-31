@@ -8,10 +8,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Army Quest">
   <title>Army Quest I: In Pursuit of the Eagle</title>
-  <link rel="manifest" href="manifest.webmanifest?v=2026.10.31.1">
-  <link rel="icon" href="icon.svg?v=2026.10.31.1" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="icon.svg?v=2026.10.31.1">
-  <link rel="stylesheet" href="style.css?v=2026.10.31.1">
+  <link rel="manifest" href="manifest.webmanifest?v=2026.10.31.2">
+  <link rel="icon" href="icon.svg?v=2026.10.31.2" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.svg?v=2026.10.31.2">
+  <link rel="stylesheet" href="style.css?v=2026.10.31.2">
 </head>
 <body>
   <div id="frame">
@@ -25,23 +25,23 @@
       Try: <code>look room</code>, <code>open dresser</code>, <code>wear clothes</code>,
       <code>read brochure</code>, <code>take wallet</code>, <code>inventory</code>, <code>help</code>
     </p>
-    <p id="meta">Plays 100% offline &bull; saves stay in your browser &bull; v2026.10.31.1</p>
+    <p id="meta">Plays 100% offline &bull; saves stay in your browser &bull; v2026.10.31.2</p>
   </div>
 
   <!-- Classic scripts: load order = parser, gfx, sprites, engine, rooms, main. -->
-  <script src="parser.js?v=2026.10.31.1"></script>
-  <script src="gfx.js?v=2026.10.31.1"></script>
-  <script src="sprites.js?v=2026.10.31.1"></script>
-  <script src="engine.js?v=2026.10.31.1"></script>
-  <script src="rooms/room1_bedroom.js?v=2026.10.31.1"></script>
-  <script src="rooms/room2_placeholder.js?v=2026.10.31.1"></script>
-  <script src="main.js?v=2026.10.31.1"></script>
+  <script src="parser.js?v=2026.10.31.2"></script>
+  <script src="gfx.js?v=2026.10.31.2"></script>
+  <script src="sprites.js?v=2026.10.31.2"></script>
+  <script src="engine.js?v=2026.10.31.2"></script>
+  <script src="rooms/room1_bedroom.js?v=2026.10.31.2"></script>
+  <script src="rooms/room2_street.js?v=2026.10.31.2"></script>
+  <script src="main.js?v=2026.10.31.2"></script>
 
   <script>
     // Register the offline service worker when served over http(s).
     if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
       window.addEventListener('load', function () {
-        navigator.serviceWorker.register('sw.js?v=2026.10.31.1').catch(function () {});
+        navigator.serviceWorker.register('sw.js?v=2026.10.31.2').catch(function () {});
       });
     }
   </script>

@@ -6,6 +6,7 @@
 
   const canvas = document.getElementById('game');
   const engine = new AQ.Engine(canvas);
+  AQ.engine = engine; // handy for debugging from the console
 
   engine.changeRoom(AQ.createRoom1());
   engine.start();

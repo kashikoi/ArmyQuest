@@ -62,6 +62,12 @@
         sleeves: 'long', belt: false,
       };
 
+      // Death / game-over state (Sierra style: die, then RESTORE or RESTART).
+      this.inputLocked = false;
+      this.deathTimer = 0;
+      this.deathText = '';
+      this.gameOver = false;
+
       this.room = null;
       window.addEventListener('keydown', (e) => this.onKeyDown(e));
     }
@@ -100,10 +106,20 @@
     update(dt) {
       if (this.modal.visible) return; // paused while a popup is up
 
-      if (this.room && this.room.update) this.room.update(this);
+      if (this.deathTimer > 0) {
+        this.deathTimer -= dt;
+        if (this.deathTimer <= 0) {
+          this.deathTimer = 0;
+          this.showModal(this.deathText, () => { this.gameOver = true; });
+          return;
+        }
+      }
+
+      if (this.room && this.room.update) this.room.update(this, dt);
       if (this.modal.visible) return;
 
       const p = this.player;
+      if (p.dead || this.inputLocked) { p.moving = false; p.frame = 0; return; }
       const { dx, dy } = p.dir;
       if (dx === 0 && dy === 0) { p.moving = false; p.frame = 0; p.animTime = 0; return; }
       p.moving = true;
@@ -178,6 +194,7 @@
 
     setMove(mv) {
       const p = this.player;
+      if (p.dead || this.inputLocked) return;
       if (p.dir.dx === mv.dx && p.dir.dy === mv.dy) { p.dir = { dx: 0, dy: 0 }; }
       else { p.dir = { dx: mv.dx, dy: mv.dy }; p.facing = mv.facing; }
     }
@@ -194,7 +211,15 @@
 
       const parsed = AQ.parse(raw);
 
+      if (this.player.dead || this.gameOver) {
+        if (parsed.verb === 'restore') return this.restoreGame();
+        if (parsed.verb === 'restart') return this.restartGame();
+        this.showModal("You're dead, soldier. Type RESTORE to load a saved game or RESTART to begin again.");
+        return;
+      }
+
       switch (parsed.verb) {
+        case 'restart':   return this.restartGame();
         case 'inventory': return this.showInventory();
         case 'save':      return this.saveGame();
         case 'restore':   return this.restoreGame();
@@ -219,7 +244,7 @@
       this.showModal(
         "COMMANDS: look / read / open / take / wear / talk / inventory (i).  " +
         "MOVE: arrow keys or numpad (same key or 5/Space to stop).  " +
-        "SAVE: F5 or type 'save'.  RESTORE: F7 or type 'restore'."
+        "SAVE: F5 or type 'save'.  RESTORE: F7 or type 'restore'.  RESTART: type 'restart'."
       );
     }
 
@@ -229,6 +254,7 @@
     // Save / Restore (localStorage — the Sierra way)
     // ---------------------------------------------------------------------
     saveGame() {
+      if (this.player.dead || this.gameOver) { this.showModal("You can't save the game when you're dead!"); return; }
       const r = this.room;
       const data = {
         v: 1,
@@ -268,10 +294,40 @@
       this.score = data.score || 0;
       this.rank = data.rank || 'Civilian';
       this.inventory = data.inventory || [];
+      this.clearDeath();
       if (data.player) Object.assign(this.player, data.player);
       this.player.dir = { dx: 0, dy: 0 };
 
       this.showModal('Game restored. Welcome back, soldier.');
+    }
+
+    restartGame() {
+      this.clearDeath();
+      this.score = 0;
+      this.rank = 'Civilian';
+      this.inventory = [];
+      this.changeRoom(AQ.createRoom1());
+      this.showModal("Let's try that again. Jack wakes up in his bedroom on the big day...");
+    }
+
+    // ---------------------------------------------------------------------
+    // Death (rooms call killPlayer; the death popup follows after a beat)
+    // ---------------------------------------------------------------------
+    killPlayer(text, delay = 1.4) {
+      const p = this.player;
+      if (p.dead) return;
+      p.dead = true;
+      this.inputLocked = true;
+      this.stopPlayer();
+      this.deathText = text;
+      this.deathTimer = delay;
+    }
+
+    clearDeath() {
+      this.player.dead = false;
+      this.inputLocked = false;
+      this.deathTimer = 0;
+      this.gameOver = false;
     }
 
     // ---------------------------------------------------------------------
@@ -383,6 +439,15 @@
 
       const facing = ['up', 'down', 'left', 'right'].includes(p.facing) ? p.facing : 'down';
       const img = S.getJackFrame(p, facing, p.moving ? p.frame : 0);
+      if (p.dead) {
+        // Knocked flat: rotate the standing frame 90 degrees (stays pixel-exact).
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(-Math.PI / 2);
+        ctx.drawImage(img, -4, -S.JACK_H / 2);
+        ctx.restore();
+        return;
+      }
       ctx.drawImage(img, x - S.JACK_W / 2, y - S.JACK_H + 1);
     }
   }

@@ -1,6 +1,6 @@
 // sw.js — Army Quest service worker. Cache-first for full offline play.
 // Bump CACHE on every release so clients pick up new assets.
-const CACHE = 'armyquest-2026.10.31.1';
+const CACHE = 'armyquest-2026.10.31.2';
 
 const ASSETS = [
   './',
@@ -11,7 +11,7 @@ const ASSETS = [
   './sprites.js',
   './engine.js',
   './rooms/room1_bedroom.js',
-  './rooms/room2_placeholder.js',
+  './rooms/room2_street.js',
   './main.js',
   './manifest.webmanifest',
   './icon.svg',

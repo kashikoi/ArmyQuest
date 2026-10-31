@@ -13,10 +13,13 @@
     wear:      ['wear', 'dress', 'put', 'don'],
     talk:      ['talk', 'speak', 'ask', 'say'],
     use:       ['use'],
-    go:        ['go', 'walk', 'enter', 'exit', 'move'],
+    go:        ['go', 'walk', 'enter', 'exit', 'move', 'cross'],
+    push:      ['push', 'press', 'hit'],
+    wait:      ['wait', 'stand'],
     inventory: ['inventory', 'inv', 'i'],
     save:      ['save'],
     restore:   ['restore', 'load'],
+    restart:   ['restart', 'reset'],
     help:      ['help', 'commands', 'info'],
   };
 
@@ -32,6 +35,17 @@
     poster:   ['poster', 'picture'],
     door:     ['door', 'hallway', 'out', 'outside'],
     window:   ['window'],
+    street:   ['street', 'road', 'main'],
+    crosswalk:['crosswalk', 'crossing', 'zebra'],
+    light:    ['light', 'lights', 'signal', 'signals', 'stoplight', 'walk'],
+    button:   ['button'],
+    car:      ['car', 'cars', 'traffic', 'truck', 'pickup'],
+    office:   ['office', 'recruiting', 'recruiter', 'army'],
+    parlor:   ['parlor', 'ice', 'icecream', 'cream', 'shop', 'sarah'],
+    barber:   ['barber', 'barbershop'],
+    diner:    ['diner', 'restaurant'],
+    hydrant:  ['hydrant'],
+    sidewalk: ['sidewalk', 'curb'],
   };
 
   // Words that carry no meaning for the parser.
