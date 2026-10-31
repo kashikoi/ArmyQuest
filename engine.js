@@ -19,19 +19,10 @@
   const PROMPT_Y = VIEW_BOTTOM;          // command prompt top (y = 172)
   const PROMPT_H = VH - PROMPT_Y;        // 28 px
 
-  // -------------------------------------------------------------------------
-  // 16-color EGA palette
-  // -------------------------------------------------------------------------
-  const EGA = {
-    black:       '#000000', blue:        '#0000AA', green:       '#00AA00',
-    cyan:        '#00AAAA', red:         '#AA0000', magenta:     '#AA00AA',
-    brown:       '#AA5500', lightgray:   '#AAAAAA', darkgray:    '#555555',
-    brightblue:  '#5555FF', brightgreen: '#55FF55', brightcyan:  '#55FFFF',
-    brightred:   '#FF5555', brightmagenta:'#FF55FF', yellow:     '#FFFF55',
-    white:       '#FFFFFF',
-  };
+  const EGA = AQ.EGA; // 16-color palette, defined in gfx.js
 
-  const PLAYER_SPEED = 55;            // virtual pixels per second
+  const PLAYER_SPEED = 38;            // virtual pixels per second
+  const WALK_FRAME_TIME = 0.15;       // seconds per walk-cycle frame
   const SAVE_KEY = 'armyquest.save.v1';
 
   // Movement keyed by KeyboardEvent.code so the numeric keypad is movement
@@ -68,6 +59,7 @@
         frame: 0, animTime: 0, moving: false,
         skin: EGA.brown, hair: EGA.black, shoes: EGA.darkgray,
         shirt: EGA.brightcyan, pants: EGA.brightblue, // pajamas to start
+        sleeves: 'long', belt: false,
       };
 
       this.room = null;
@@ -113,7 +105,7 @@
 
       const p = this.player;
       const { dx, dy } = p.dir;
-      if (dx === 0 && dy === 0) { p.moving = false; return; }
+      if (dx === 0 && dy === 0) { p.moving = false; p.frame = 0; p.animTime = 0; return; }
       p.moving = true;
 
       const len = Math.hypot(dx, dy) || 1;
@@ -128,7 +120,10 @@
       else if (this.canStand(p.x, ny)) { p.y = ny; }
 
       p.animTime += dt;
-      if (p.animTime > 0.14) { p.animTime = 0; p.frame = (p.frame + 1) % 2; }
+      if (p.animTime > WALK_FRAME_TIME) {
+        p.animTime -= WALK_FRAME_TIME;
+        p.frame = (p.frame + 1) % AQ.sprites.JACK_FRAMES;
+      }
     }
 
     // Collision test against walkable floor + obstacle rects. (x,y) is feet.
@@ -244,6 +239,7 @@
         player: {
           x: this.player.x, y: this.player.y, facing: this.player.facing,
           shirt: this.player.shirt, pants: this.player.pants,
+          sleeves: this.player.sleeves, belt: this.player.belt,
         },
         roomState: r && r.serialize ? r.serialize() : {},
       };
@@ -373,42 +369,21 @@
       ctx.textAlign = 'left';
     }
 
-    // Procedural pixel-art sprite for Jack, drawn relative to his feet (x, y).
+    // Jack's hand-pixeled sprite (sprites.js), drawn relative to his feet (x, y).
     drawPlayer(ctx) {
       const p = this.player;
       const x = Math.round(p.x), y = Math.round(p.y);
-      const swing = (p.moving && p.frame === 1) ? 1 : 0;
+      const S = AQ.sprites;
 
-      ctx.fillStyle = 'rgba(0,0,0,0.25)';
-      ctx.fillRect(x - 4, y - 1, 9, 2);
+      // Dithered contact shadow keeps the palette strictly EGA.
+      ctx.fillStyle = AQ.gfx.dither(ctx, null, EGA.black, 'checker');
+      ctx.fillRect(x - 5, y - 1, 11, 1);
+      ctx.fillRect(x - 7, y, 15, 1);
+      ctx.fillRect(x - 5, y + 1, 11, 1);
 
-      ctx.fillStyle = p.pants;
-      ctx.fillRect(x - 3, y - 8, 2, 6 - swing);
-      ctx.fillRect(x + 1, y - 8, 2, 5 + swing);
-
-      ctx.fillStyle = p.shoes;
-      ctx.fillRect(x - 3, y - 2, 2, 2);
-      ctx.fillRect(x + 1, y - 2, 2, 2);
-
-      ctx.fillStyle = p.shirt;
-      ctx.fillRect(x - 3, y - 14, 6, 7);
-      ctx.fillRect(x - 4, y - 13, 1, 5);
-      ctx.fillRect(x + 3, y - 13, 1, 5);
-
-      ctx.fillStyle = p.skin;
-      ctx.fillRect(x - 4, y - 9, 1, 1);
-      ctx.fillRect(x + 3, y - 9, 1, 1);
-
-      ctx.fillStyle = p.skin;
-      ctx.fillRect(x - 2, y - 19, 4, 4);
-      ctx.fillStyle = p.hair;
-      ctx.fillRect(x - 2, y - 20, 4, 2);
-      if (p.facing === 'left' || p.facing === 'right') ctx.fillRect(x - 2, y - 19, 4, 1);
-
-      ctx.fillStyle = EGA.black;
-      if (p.facing === 'down') { ctx.fillRect(x - 1, y - 17, 1, 1); ctx.fillRect(x + 1, y - 17, 1, 1); }
-      else if (p.facing === 'left') { ctx.fillRect(x - 2, y - 17, 1, 1); }
-      else if (p.facing === 'right') { ctx.fillRect(x + 1, y - 17, 1, 1); }
+      const facing = ['up', 'down', 'left', 'right'].includes(p.facing) ? p.facing : 'down';
+      const img = S.getJackFrame(p, facing, p.moving ? p.frame : 0);
+      ctx.drawImage(img, x - S.JACK_W / 2, y - S.JACK_H + 1);
     }
   }
 
